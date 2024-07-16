@@ -1,0 +1,67 @@
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id    Int   @id @default(autoincrement())
+  login String?
+  email String @unique
+  password String
+  description String?
+  role Role
+  isActivate Boolean? @default(false)
+  banned Boolean? @default(false)
+  refreshToken RefreshToken?
+  projects Project[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+  COMPANY
+}
+
+model RefreshToken {
+   id    Int   @id @default(autoincrement())
+   token String
+   user User @relation(fields: [userId], references: [id])
+   userId Int @unique
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+
+model Project {
+  id Int @id @default(autoincrement())
+     title String
+     target Float
+     finishDate DateTime
+     description String?
+     personType String
+     fullName String
+     town String
+     inn Float
+     passport String
+     issuedBy String
+     issuedDate DateTime
+     departmentCode String
+     address String
+     checkingAccount String
+     payeesBank String
+     korAccount String
+     bik String
+     otherData String?
+     user User @relation(fields: [userId], references: [id])
+     userId Int
+}
